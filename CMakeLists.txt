@@ -3,6 +3,18 @@ project(CMakeSFMLProject LANGUAGES CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+if(MINGW)
+    message(NOTICE "MINGW detected, adding coroutine support")
+    add_compile_options(-fcoroutines)
+elseif(MSVC)
+    message(NOTICE "MSVC detected, adding coroutine support")
+    add_compile_options(/await)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    message(NOTICE "Clang detected, adding coroutine support")
+    add_compile_options(-fcoroutines-ts -stdlib=libc++)
+    add_link_options(-stdlib=libc++)
+endif()
+
 include(FetchContent)
 FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
@@ -10,10 +22,28 @@ FetchContent_Declare(SFML
     GIT_SHALLOW ON
     EXCLUDE_FROM_ALL
     SYSTEM)
-FetchContent_MakeAvailable(SFML)
 
-add_executable(main src/main.cpp)
-target_compile_features(main PRIVATE cxx_std_17)
-target_link_libraries(main PRIVATE SFML::Graphics)
+FetchContent_Declare(cppcoro
+    GIT_REPOSITORY https://github.com/shenli99/cppcoro.git
+    GIT_TAG 26.1.9
+    GIT_SHALLOW ON
+    EXCLUDE_FROM_ALL
+    SYSTEM)
 
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT main)
+
+FetchContent_MakeAvailable(SFML cppcoro)
+
+file(GLOB_RECURSE SOURCES src/*.cpp)
+
+add_executable(main ${SOURCES})
+target_include_directories(main PRIVATE
+    src/include
+)
+target_compile_features(main PRIVATE cxx_std_20)
+target_link_libraries(main PRIVATE
+    SFML::Graphics
+    SFML::Window
+    cppcoro
+)
+
+# set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT main)
