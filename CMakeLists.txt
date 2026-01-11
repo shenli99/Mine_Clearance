@@ -52,13 +52,6 @@ target_link_libraries(main PRIVATE
     cppcoro
 )
 
-add_custom_command(TARGET main POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${CMAKE_SOURCE_DIR}/fonts/yahei.ttf"
-    $<TARGET_FILE_DIR:main>/yahei.ttf
-  COMMENT "Copy fonts/yahei.ttf -> ${TARGET_FILE_DIR:main}/yahei.ttf"
-)
-
 add_custom_command(TARGET TARGET_NAME POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${CMAKE_CURRENT_SOURCE_DIR}/fonts"
