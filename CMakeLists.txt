@@ -46,4 +46,9 @@ target_link_libraries(main PRIVATE
     cppcoro
 )
 
+add_custom_command(TARGET main POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/fonts"
+        "<TARGET_FILE_DIR:main>/"
+
 # set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT main)
