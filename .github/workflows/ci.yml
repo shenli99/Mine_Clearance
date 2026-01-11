@@ -8,28 +8,35 @@ defaults:
 
 jobs:
   build:
-    name: ${{ matrix.platform.name }} ${{ matrix.config.name }}
-    runs-on: ${{ matrix.platform.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        platform:
-        - { name: Windows VS2022, os: windows-2022  }
-        config:
-        - { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
-        - { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
+    name: Windows MinGW release
+    runs-on: windows-2022
 
     steps:
-    - name: Install Linux Dependencies
-      if: runner.os == 'Linux'
-      run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libxi-dev libudev-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev libfreetype-dev
-
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Configure
-      run: cmake -B build ${{matrix.platform.flags}} ${{matrix.config.flags}}
+    - name: Setup MSYS2 / MinGW (install toolchain, cmake, ninja)
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >
+          mingw-w64-x86_64-toolchain
+          mingw-w64-x86_64-cmake
+          mingw-w64-x86_64-ninja
 
-    - name: Build
-      run: cmake --build build --config Release -G "MinGW Makefiles"
+    - name: Show CMake version
+      run: |
+        # 确保使用 MSYS2 的 mingw 工具链（msys2 默认安装在 C:\msys64）
+        export PATH="/c/msys64/mingw64/bin:$PATH"
+        cmake --version
+
+    - name: Configure (use CMake preset)
+      run: |
+        export PATH="/c/msys64/mingw64/bin:$PATH"
+        cmake --preset release
+
+    - name: Build (use CMake build preset)
+      run: |
+        export PATH="/c/msys64/mingw64/bin:$PATH"
+        cmake --build --preset release
