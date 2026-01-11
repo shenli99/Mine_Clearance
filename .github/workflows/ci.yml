@@ -40,3 +40,22 @@ jobs:
       run: |
         export PATH="/c/msys64/mingw64/bin:$PATH"
         cmake --build --preset release
+
+    - name: List build outputs
+      run: |
+        echo "PWD: $(pwd)"
+        echo "Listing likely output directories..."
+        ls -la build || true
+        ls -la build/release || true
+        ls -la build/release/bin || true
+        echo "Find executables:"
+        find build -type f -name '*.exe' -print || true
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: mine_clearance-windows-build
+        path: |
+          build/release/bin/**
+          build/**/bin/**
+          fonts/**
