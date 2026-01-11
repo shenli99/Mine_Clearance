@@ -36,19 +36,27 @@ FetchContent_MakeAvailable(SFML cppcoro)
 file(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}" _RESOURCE_DIR_PATH)
 string(REPLACE "\\" "/" _RESOURCE_DIR_PATH "${_RESOURCE_DIR_PATH}")
 
-target_compile_definitions(main PRIVATE RESOURCE_DIR=\"${_RESOURCE_DIR_PATH}\")
-
 file(GLOB_RECURSE SOURCES src/*.cpp)
 
 add_executable(main ${SOURCES})
 target_include_directories(main PRIVATE
     src/include
 )
+
+target_compile_definitions(main PRIVATE RESOURCE_DIR=\"${_RESOURCE_DIR_PATH}\")
+
 target_compile_features(main PRIVATE cxx_std_20)
 target_link_libraries(main PRIVATE
     SFML::Graphics
     SFML::Window
     cppcoro
+)
+
+add_custom_command(TARGET TARGET_NAME POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_SOURCE_DIR}/fonts/yahei.ttf"
+    $<TARGET_FILE_DIR:TARGET_NAME>/yahei.ttf
+  COMMENT "Copy fonts/yahei.ttf -> $<TARGET_FILE_DIR:TARGET_NAME>/yahei.ttf"
 )
 
 add_custom_command(TARGET main POST_BUILD
