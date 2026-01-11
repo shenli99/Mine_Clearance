@@ -4,6 +4,7 @@
         {
             "name": "debug",
             "generator": "Ninja",
+            "binaryDir": "build/debug",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_CXX_FLAGS": "-g -fsanitize=address"
@@ -12,6 +13,8 @@
         {
             "name": "release",
             "inherits": ["debug"],
+            "generator": "Ninja",
+            "binaryDir": "build/release",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_CXX_FLAGS": "-O3 -DNDEBUG"
@@ -22,6 +25,11 @@
         {
             "name": "Debug",
             "configurePreset": "debug"
+        },
+        {
+            "name": "release",
+            "configurePreset": "release",
+            "jobs": 4
         }
     ]
 }
