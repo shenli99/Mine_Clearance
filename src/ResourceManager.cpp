@@ -3,11 +3,11 @@
 
 namespace Resources {
     #include <incbin.h>
-    INCBIN(FlagPng, "../icons/flag.png");
-    INCBIN(Mine, "../icons/mine.png");
-    INCBIN(Win, "../icons/win.png");
-    INCBIN(Lose, "../icons/lose.png");
-    INCBIN(Smile, "../icons/smile.png");
+    INCBIN(FlagPng, RESOURCE_DIR "/icons/flag.png");
+    INCBIN(Mine, RESOURCE_DIR "/icons/mine.png");
+    INCBIN(Win, RESOURCE_DIR "/icons/win.png");
+    INCBIN(Lose, RESOURCE_DIR "/icons/lose.png");
+    INCBIN(Smile, RESOURCE_DIR "/icons/smile.png");
 }
 
 namespace Singleton {
