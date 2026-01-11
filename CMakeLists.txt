@@ -53,9 +53,9 @@ target_link_libraries(main PRIVATE
 )
 
 add_custom_command(TARGET main POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
         "${CMAKE_CURRENT_SOURCE_DIR}/fonts/yahei.ttf"
-        "$<TARGET_FILE_DIR:mian>/yahei.ttf"
+        "$<TARGET_FILE_DIR:main>/yahei.ttf"
         )
 
 # set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT main)
