@@ -33,6 +33,11 @@ FetchContent_Declare(cppcoro
 
 FetchContent_MakeAvailable(SFML cppcoro)
 
+file(TO_CMAKE_PATH "${CMAKE_SOURCE_DIR}" _RESOURCE_DIR_PATH)
+string(REPLACE "\\" "/" _RESOURCE_DIR_PATH "${_RESOURCE_DIR_PATH}")
+
+target_compile_definitions(TARGET_NAME PRIVATE RESOURCE_DIR=\"${_RESOURCE_DIR_PATH}\")
+
 file(GLOB_RECURSE SOURCES src/*.cpp)
 
 add_executable(main ${SOURCES})
